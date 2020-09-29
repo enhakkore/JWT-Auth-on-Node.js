@@ -5,6 +5,13 @@ const jwt = require('jsonwebtoken');
 
 app.use(express.json());
 
+let refreshTokenStock = []
+
+app.delete('/logout', (req, res) => {
+  refreshTokenStock = refreshTokenStock.filter(token => token !== req.body.refreshToken);
+  res.sendStatus(204);
+});
+
 app.post('/token', (req, res) => {
   const refreshToken = req.body.refreshToken;
   if(refreshToken === null) return res.sendStatus(401);
