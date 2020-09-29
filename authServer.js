@@ -11,8 +11,15 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   const user = {name: username};
 
-  const accessToken = jwt.sign(user, process.env.JWT_ACCESS_SECRET);
-  res.json({ accessToken: accessToken});
+  const accessToken = generateAccessToken(user);
+  const refreshToken = jwt.sign(user, process.env.JWT_REFRESH_SECRET);
+  refreshTokenStock.push(refreshToken);
+  
+  res.json({ accessToken: accessToken, refreshToken: refreshToken});
 });
+
+function generateAccessToken(user) {
+  return jwt.sign(user, process.env.JWT_ACCESS_SECRET, { expiresIn: '15s' });
+}
 
 app.listen(4000);
